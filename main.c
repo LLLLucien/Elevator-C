@@ -7,8 +7,10 @@
 int main()
 {
     Elevator Elev;
-    InitElevator(&Elev);
-    InputFloor(&Elev);
-    ElevatorRun(&Elev);
+    Init_Elevator(&Elev);
+    Input_Floor(&Elev);
+    Output_ElevatorInfo(&Elev);
+    Input_Passenger(&Elev);
+    Output_finalTargets(&Elev);
     return 0;
 }

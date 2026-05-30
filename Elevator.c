@@ -1,79 +1,85 @@
 #include "Elevator.h"
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-void InitElevator(Elevator *Elev)
+void Init_Elevator(Elevator *Elev)
 {
-    Elev->floorNum = 10;        // 初始化总楼层数量为10
-    Elev->currentFloor = 0;     // 初始化当前所在楼层为0
-    Elev->maxPassenger = 5;     // 最大载客数固定为5
-    Elev->currentPassenger = 0; // 当前载客数为0
-    Elev->state = STOP;         // 初始化当前运行状态为停止
-    Elev->targetCount = 0;      // 目标楼层数量为0
-    Elev->stopCount = 0;        // 停靠次数为0
-}
-
-// 外部请求结构体输入函数
-void InputFloor(Elevator *Elev)
-{
-    printf("请输入外部楼层请求数量：");
-    scanf("%d", &Elev->targetCount);
-    printf("请输入外部楼层请求（格式：楼层 方向）：");
-    for (int i = 0; i < Elev->targetCount; i++)
+    Elev->finalTargetCount = 0;
+    for (int i = 0; i < MAX_FLOOR_COUNT; i++)
     {
-        scanf("%d%c", &Elev->Request_out[i].floor,
-              &Elev->Request_out[i].direction);
+        Elev->finalTargets[i] = -1;
+    }
+
+    Elev->currentFloor = 1;
+    Elev->targetCount = 0;
+    Elev->externalCount = 0;
+
+    for (int i = 0; i < MAX_FLOOR_COUNT; i++)
+    {
+        Elev->externalRequests[i].floor = i + 1;
+        Elev->externalRequests[i].type = EXTERNAL;
+        Elev->externalRequests[i].targetFloor = -1;
+        Elev->externalRequests[i].isProcessed = 0;
     }
 }
-// 输出电梯初始信息
-void output_ElevatorInfo(Elevator *Elev)
-{
-    printf("电梯初始信息");
-    printf("当前所在楼层：%d\n", Elev->currentFloor);
-    printf("最大载客数：%d\n", Elev->maxPassenger);
-    printf("当前载客数：%d\n", Elev->currentPassenger);
-    printf("当前运行状态：%d\n", Elev->state);
-    printf("目标楼层数量：%d\n", Elev->targetCount);
-}
-void ElevatorRun(Elevator *Elev)
-{
-    SortRequest(Elev);
-    output_ElevatorInfo(Elev);
-    printf("电梯运行结果\n");
 
-    for (int i = 0; i < Elev->targetCount; i++)
+void Input_Floor(Elevator *Elev)
+{
+    printf("请输入外部楼层请求数量：");
+    scanf("%d", &Elev->externalCount);
+    printf("请输入外部楼层请求(1 2 3): ");
+
+    int target = 0;
+    for (int i = 0; i < Elev->externalCount; i++)
     {
-        if (i == Elev->targetCount - 1)
+        scanf("%d", &target);
+        Elev->externalRequests[target - 1].targetFloor = 0;
+
+        // 先记录最终目标楼层,放入最终目标楼层队列
+        Elev->finalTargetCount++;
+        Elev->finalTargets[i] = target;
+    }
+}
+
+void Output_ElevatorInfo(Elevator *Elev)
+{
+    printf("电梯初始信息\n");
+    printf("当前所在楼层：%d\n", Elev->currentFloor);
+    printf("目标楼层数量：%d\n", Elev->externalCount);
+    printf("目标楼层队列：");
+    for (int i = 0; i < MAX_FLOOR_COUNT; i++)
+    {
+        if (Elev->externalRequests[i].targetFloor != -1)
         {
-            printf("%d", Elev->Request_out[i].floor);
-            break;
+            printf("%d -> ", i + 1);
         }
-        printf("%d->", Elev->Request_out[i].floor);
     }
     printf("\n");
 }
 
-void SortRequest(Elevator *Elev)
+void Input_Passenger(Elevator *Elev)
 {
-    for (int i = 0; i < Elev->targetCount; i++)
+    printf("输入乘客请求 \n");
+    for (int i = 0; i < MAX_FLOOR_COUNT; i++)
     {
-        int swapped = 0; // 没有交换
-        for (int j = 0; j < Elev->targetCount - i - 1; j++)
+        // 如果该楼层有乘客请求,则记录乘客目标楼层,放入最终目标楼层队列
+        if (Elev->externalRequests[i].targetFloor != -1)
         {
-            if (Elev->Request_out[j].floor > Elev->Request_out[j + 1].floor)
-            {
-                Request temp = Elev->Request_out[j];
-                Elev->Request_out[j] = Elev->Request_out[j + 1];
-                Elev->Request_out[j + 1] = temp;
-                swapped = 1;
-            }
-        }
-        // 如果没有交换，说明已经有序，直接跳出循环
-        if (!swapped)
-        {
-            break;
+            printf("请输入%d楼的乘客目标楼层:", i + 1);
+            scanf("%d", &Elev->externalRequests[i].targetFloor);
+
+            Elev->finalTargets[Elev->finalTargetCount++] =
+                Elev->externalRequests[i].targetFloor;
         }
     }
+}
+
+void Output_finalTargets(Elevator *Elev)
+{
+    printf("最终目标楼层队列：");
+    for (int i = 0; i < Elev->finalTargetCount; i++)
+    {
+        printf("%d -> ", Elev->finalTargets[i]);
+    }
+    printf("\n");
 }
