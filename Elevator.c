@@ -18,13 +18,6 @@ void Init_Elevator(Elevator *Elev)
     Elev->direction = 0; // 方向的标志位，0表示向上，1表示向下
     Elev->externalCount = 0; // 外部请求数量
     Elev->internalCount = 0; // 内部目标请求数量
-
-    // for (int i = 0; i < MAX_FLOOR_COUNT; i++)
-    // {
-    //     Elev->externalRequests[i].floor = i + 1;
-    //     Elev->externalRequests[i].type = EXTERNAL;
-    //     Elev->externalRequests[i].targetFloor = -1;
-    //     Elev->externalRequests[i].isProcessed = 0;
 }
 
 void Input_External_Requests(Elevator *Elev)
