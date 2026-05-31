@@ -27,8 +27,7 @@ void Input_Internal_Requests(Elevator *Elev);
 void Output_finalTargets(Elevator *Elev);
 void Sort_Red_Top(int *array, int count);
 void Sort_Blue_Bottom(int *array, int count);
-void Sort_External_Requests(int *array, int count, int currentFloor,
-                            Elevator *Elev);
+void Sort_External_Requests(int *array, int count, int currentFloor, Elevator *Elev);
 void Look_Sort(Elevator *Elev);
 void Determine_Initial_Direction(Elevator *Elev);
 
