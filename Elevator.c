@@ -449,7 +449,7 @@ void Determine_Initial_Direction(Elevator *Elev)
     int minUp = Red[0] - current;    // 上行中最近的与当前的距离
     int minDown = current - blue[0]; // 下行中最近的
 
-    // 距离近的方向优先
+    // 距离近的方向优先,相同默认上行方向
     if (minDown < minUp)
     {
         Elev->direction = 1; // 下行

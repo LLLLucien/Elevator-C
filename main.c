@@ -15,8 +15,8 @@ int main()
     printf("\n");
 
     Elevator Elev;
-    // 初始化电梯
 
+    // 初始化电梯
     Init_Elevator(&Elev);
     // 输入外部请求
     Input_External_Requests(&Elev);
@@ -25,7 +25,6 @@ int main()
     // 输出电梯信息
     Output_ElevatorInfo(&Elev);
     // 输入内部目标
-
     Input_Internal_Requests(&Elev);
     // 查看并排序目标
     Look_Sort(&Elev);
